@@ -1,0 +1,58 @@
+import pandas as pd
+import xgboost as xgb
+import matplotlib.pyplot as plt
+
+# configura visualizacao
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+
+# le o dataframe
+df = pd.read_csv('titanic/train.csv', sep=',', usecols=['Age', 'Fare', 'Survived'])
+df_bin = df
+
+
+def TuringOptimalBinning(data_frame, target, **kwargs):
+    """
+    -- Esta funcao categoriza variaveis continuas usando arvore de decisao.
+    -- A quantidade de categorias geradas sera igual ou aproximada da quantidade desejada
+
+    :param data_frame:  Data Frame
+    :param target:      Variavel Target
+    :param kwargs:      N pares de variaveis e numero de categorias desejadas
+    :return:            Data Frame com as variaveis categorizada
+
+    sample: TuringOptimalBinning(data_frame, 'Survived', Age=5, Fare=7)
+    """
+
+    # dct_aux = dict()
+
+    for c, v in kwargs.items():
+        for j in range(v, 0, -1):
+            create_xgb = xgb.XGBClassifier(n_estimators=j, max_depth=2)
+            create_xgb.fit(data_frame[c].to_frame(), data_frame[target])
+
+            # cria uma nova coluna com os bins
+            data_frame['bin_'+c] = create_xgb.predict_proba(data_frame[c].to_frame())[:, 1]
+            qtd_bins_curr = len(df_bin['bin_'+c].unique())
+
+            if qtd_bins_curr <= v:
+                # dct_aux['n_estimators_' + str(j)] = qtd_bins_curr
+                break
+    return data_frame
+
+
+#print(TuringOptimalBinning.__doc__)
+
+df_bin2 = TuringOptimalBinning(df_bin, 'Survived', Age=5, Fare=7)
+print(df_bin2['bin_Age'].unique())
+print(df_bin2['bin_Fare'].unique())
+
+
+for i in [x for x in list(df_bin2.columns) if 'bin' in x]:
+    agg = pd.concat([
+        df_bin2.groupby(['teste'+i])[i].mean(),
+        df_bin2.groupby(['teste'+i])[i].min(),
+        df_bin2.groupby(['teste'+i])[i].max()
+    ], axis=1).reset_index()
+    agg.columns = ['i', 'mean', 'min', 'max']
+    print(agg.head())
