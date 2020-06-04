@@ -8,7 +8,7 @@ from parameterized import parameterized
 class TestWoe(TestCase):
 
     def setUp(self):
-        df = pd.read_csv('../dados/df_input_test.csv')
+        df = pd.read_csv('/mnt/Windows/Paulo/PycharmProjects/pod-turing/dados/df_input_test.csv')
         self.woe, self.iv = TuringClassInformationValueWoEMetrics(df, 'target', ['blood_group', 'sex'])
 
     def test_qtd_variables_woe(self):
