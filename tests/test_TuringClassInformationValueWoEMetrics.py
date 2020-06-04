@@ -3,12 +3,13 @@ from pandas.testing import assert_frame_equal
 import pandas as pd
 from unittest import TestCase
 from parameterized import parameterized
+import os
 
 
 class TestWoe(TestCase):
 
     def setUp(self):
-        df = pd.read_csv('/mnt/Windows/Paulo/PycharmProjects/pod-turing/dados/df_input_test.csv')
+        df = pd.read_csv('../utils/df_input_test.csv')
         self.woe, self.iv = TuringClassInformationValueWoEMetrics(df, 'target', ['blood_group', 'sex'])
 
     def test_qtd_variables_woe(self):
