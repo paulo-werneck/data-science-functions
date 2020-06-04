@@ -1,2 +1,2 @@
-# pod-testes
-POD - Repositório de testes
+# Testes
+Repositório de testes
