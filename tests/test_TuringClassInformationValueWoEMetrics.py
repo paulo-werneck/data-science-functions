@@ -9,6 +9,7 @@ import os
 class TestWoe(TestCase):
 
     def setUp(self):
+        print(os.system('ls -la'))
         df = pd.read_csv('../utils/df_input_test.csv')
         self.woe, self.iv = TuringClassInformationValueWoEMetrics(df, 'target', ['blood_group', 'sex'])
 
