@@ -9,11 +9,7 @@ import os
 class TestWoe(TestCase):
 
     def setUp(self):
-        print(os.system('ls'))
-        pwd = os.environ['PWD'].split('/')[:-1]
-        pwd.append('utils')
-        path = '/'.join(pwd)
-        df = pd.read_csv(path+'/df_input_test.csv')
+        df = pd.read_csv('../utils/df_input_test.csv')
         self.woe, self.iv = TuringClassInformationValueWoEMetrics(df, 'target', ['blood_group', 'sex'])
 
     def test_qtd_variables_woe(self):
