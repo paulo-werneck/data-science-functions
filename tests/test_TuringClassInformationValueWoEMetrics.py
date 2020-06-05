@@ -9,6 +9,7 @@ import os
 class TestWoe(TestCase):
 
     def setUp(self):
+        print(os.environ['PWD'])
         pwd = os.environ['PWD'].split('/')[:-1]
         pwd.append('utils')
         path = '/'.join(pwd)
